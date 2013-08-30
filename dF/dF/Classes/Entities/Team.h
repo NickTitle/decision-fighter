@@ -10,11 +10,12 @@
 
 @interface Team : NSObject
 
-@property (nonatomic, assign) float unitHealth;
-@property (nonatomic, assign) float unitSpeed;
-@property (nonatomic, assign) float unitPower;
-@property (nonatomic, assign) float unitRegenRate;
-@property (nonatomic, assign) float unitSpawnRate;
+@property (nonatomic, assign) float baseUnitHealth;
+@property (nonatomic, assign) float baseUnitSpeed;
+@property (nonatomic, assign) float baseUnitPower;
+@property (nonatomic, assign) float baseUnitRegenRate;
+@property (nonatomic, assign) float baseUnitSpawnRate;
+@property (nonatomic, retain) NSMutableArray *unitArray;
 
 +(Team *)defineTeamWithTeamString:(NSString*)ts;
 

@@ -88,7 +88,7 @@ enum {
 		[self scheduleUpdate];
 	}
     
-    [TeamBuilder makeTeamsFromQuestion:@"What should I wear today?"];
+    [TeamBuilder makeTeamsFromQuestion:@"Will team A triumph over team B?"];
     
 	return self;
 }

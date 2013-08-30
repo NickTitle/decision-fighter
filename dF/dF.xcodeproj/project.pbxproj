@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8EA6720217D052C500123BB4 /* PreUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA6720117D052C500123BB4 /* PreUnit.m */; };
 		8EF313B517CDACCB006929E7 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF313B417CDACCB006929E7 /* QuartzCore.framework */; };
 		8EF313B717CDACCB006929E7 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF313B617CDACCB006929E7 /* OpenGLES.framework */; };
 		8EF313B917CDACCB006929E7 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF313B817CDACCB006929E7 /* OpenAL.framework */; };
@@ -192,6 +193,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8EA6720017D052C500123BB4 /* PreUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreUnit.h; path = Entities/PreUnit.h; sourceTree = "<group>"; };
+		8EA6720117D052C500123BB4 /* PreUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreUnit.m; path = Entities/PreUnit.m; sourceTree = "<group>"; };
 		8EF313B117CDACCB006929E7 /* dF.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dF.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EF313B417CDACCB006929E7 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8EF313B617CDACCB006929E7 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -1196,6 +1199,8 @@
 				8EF315FF17CDAE35006929E7 /* TeamBuilder.m */,
 				8EF3160117CDB3E4006929E7 /* Team.h */,
 				8EF3160217CDB3E4006929E7 /* Team.m */,
+				8EA6720017D052C500123BB4 /* PreUnit.h */,
+				8EA6720117D052C500123BB4 /* PreUnit.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1434,6 +1439,7 @@
 				8EF315FC17CDADB6006929E7 /* ShaMachine.m in Sources */,
 				8EF3160017CDAE35006929E7 /* TeamBuilder.m in Sources */,
 				8EF3160317CDB3E4006929E7 /* Team.m in Sources */,
+				8EA6720217D052C500123BB4 /* PreUnit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1551,6 +1557,7 @@
 				8EF315F917CDACD0006929E7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
