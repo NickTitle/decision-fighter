@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8EA6720217D052C500123BB4 /* PreUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA6720117D052C500123BB4 /* PreUnit.m */; };
+		8ECF9D9417D58720004A42F6 /* Unit.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8ECF9D9317D58720004A42F6 /* Unit.mm */; };
 		8EF313B517CDACCB006929E7 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF313B417CDACCB006929E7 /* QuartzCore.framework */; };
 		8EF313B717CDACCB006929E7 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF313B617CDACCB006929E7 /* OpenGLES.framework */; };
 		8EF313B917CDACCB006929E7 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF313B817CDACCB006929E7 /* OpenAL.framework */; };
@@ -188,13 +189,15 @@
 		8EF315F217CDACD0006929E7 /* GLES-Render.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8EF315F117CDACD0006929E7 /* GLES-Render.mm */; };
 		8EF315F417CDACD0006929E7 /* blocks.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EF315F317CDACD0006929E7 /* blocks.png */; };
 		8EF315FC17CDADB6006929E7 /* ShaMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EF315FB17CDADB6006929E7 /* ShaMachine.m */; };
-		8EF3160017CDAE35006929E7 /* TeamBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EF315FF17CDAE35006929E7 /* TeamBuilder.m */; };
-		8EF3160317CDB3E4006929E7 /* Team.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EF3160217CDB3E4006929E7 /* Team.m */; };
+		8EF3160017CDAE35006929E7 /* TeamBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8EF315FF17CDAE35006929E7 /* TeamBuilder.mm */; };
+		8EF3160317CDB3E4006929E7 /* Team.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8EF3160217CDB3E4006929E7 /* Team.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		8EA6720017D052C500123BB4 /* PreUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreUnit.h; path = Entities/PreUnit.h; sourceTree = "<group>"; };
 		8EA6720117D052C500123BB4 /* PreUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreUnit.m; path = Entities/PreUnit.m; sourceTree = "<group>"; };
+		8ECF9D9217D58720004A42F6 /* Unit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Unit.h; path = Entities/Unit.h; sourceTree = "<group>"; };
+		8ECF9D9317D58720004A42F6 /* Unit.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Unit.mm; path = Entities/Unit.mm; sourceTree = "<group>"; };
 		8EF313B117CDACCB006929E7 /* dF.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dF.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EF313B417CDACCB006929E7 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8EF313B617CDACCB006929E7 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -573,9 +576,9 @@
 		8EF315FA17CDADB6006929E7 /* ShaMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaMachine.h; sourceTree = "<group>"; };
 		8EF315FB17CDADB6006929E7 /* ShaMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShaMachine.m; sourceTree = "<group>"; };
 		8EF315FE17CDAE35006929E7 /* TeamBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TeamBuilder.h; sourceTree = "<group>"; };
-		8EF315FF17CDAE35006929E7 /* TeamBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TeamBuilder.m; sourceTree = "<group>"; };
+		8EF315FF17CDAE35006929E7 /* TeamBuilder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TeamBuilder.mm; sourceTree = "<group>"; };
 		8EF3160117CDB3E4006929E7 /* Team.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Team.h; path = Entities/Team.h; sourceTree = "<group>"; };
-		8EF3160217CDB3E4006929E7 /* Team.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Team.m; path = Entities/Team.m; sourceTree = "<group>"; };
+		8EF3160217CDB3E4006929E7 /* Team.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Team.mm; path = Entities/Team.mm; sourceTree = "<group>"; };
 		8EF3160417CDB714006929E7 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1196,11 +1199,13 @@
 			isa = PBXGroup;
 			children = (
 				8EF315FE17CDAE35006929E7 /* TeamBuilder.h */,
-				8EF315FF17CDAE35006929E7 /* TeamBuilder.m */,
+				8EF315FF17CDAE35006929E7 /* TeamBuilder.mm */,
 				8EF3160117CDB3E4006929E7 /* Team.h */,
-				8EF3160217CDB3E4006929E7 /* Team.m */,
+				8EF3160217CDB3E4006929E7 /* Team.mm */,
 				8EA6720017D052C500123BB4 /* PreUnit.h */,
 				8EA6720117D052C500123BB4 /* PreUnit.m */,
+				8ECF9D9217D58720004A42F6 /* Unit.h */,
+				8ECF9D9317D58720004A42F6 /* Unit.mm */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1437,9 +1442,10 @@
 				8EF315EF17CDACD0006929E7 /* IntroLayer.mm in Sources */,
 				8EF315F217CDACD0006929E7 /* GLES-Render.mm in Sources */,
 				8EF315FC17CDADB6006929E7 /* ShaMachine.m in Sources */,
-				8EF3160017CDAE35006929E7 /* TeamBuilder.m in Sources */,
-				8EF3160317CDB3E4006929E7 /* Team.m in Sources */,
+				8EF3160017CDAE35006929E7 /* TeamBuilder.mm in Sources */,
+				8EF3160317CDB3E4006929E7 /* Team.mm in Sources */,
 				8EA6720217D052C500123BB4 /* PreUnit.m in Sources */,
+				8ECF9D9417D58720004A42F6 /* Unit.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

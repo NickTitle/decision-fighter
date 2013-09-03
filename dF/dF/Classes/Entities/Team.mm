@@ -7,16 +7,16 @@
 //
 
 #import "Team.h"
-#import "PreUnit.h"
+#import "Unit.h"
 #import "Constants.h"
 
 @implementation Team
 
-@synthesize baseUnitHealth;
-@synthesize baseUnitSpeed;
-@synthesize baseUnitPower;
-@synthesize baseUnitRegenRate;
-@synthesize baseUnitSpawnRate;
+@synthesize teamHealth;
+@synthesize teamSpeed;
+@synthesize teamPower;
+@synthesize teamRegenRate;
+@synthesize teamSpawnRate;
 
 @synthesize unitArray;
 
@@ -32,12 +32,14 @@
     
     Team *t = [[Team alloc] init];
     t.unitArray = [NSMutableArray new];
-    t.baseUnitHealth = health;
-    t.baseUnitSpeed = speed;
-    t.baseUnitPower = power;
-    t.baseUnitRegenRate = regenRate;
-    t.baseUnitSpawnRate = spawnRate;
+    t.teamHealth = health;
+    t.teamSpeed = speed;
+    t.teamPower = power;
+    t.teamRegenRate = regenRate;
+    t.teamSpawnRate = spawnRate;
+    
     return t;
+    
 }
 
 -(void)modTeam:(Team *)t withVal:(int)v atPosition:(int)p {
@@ -45,19 +47,19 @@
     int vNorm = v-8;
     switch (p) {
         case 0:
-            t.baseUnitHealth += baseHealth/4*(vNorm/8.);
+            t.teamHealth += baseHealth/4*(vNorm/8.);
             break;
         case 1:
-            t.baseUnitSpeed += baseSpeed/4*(vNorm/8.);
+            t.teamSpeed += baseSpeed/4*(vNorm/8.);
             break;
         case 2:
-            t.baseUnitPower += basePower/10*(vNorm/8.);
+            t.teamPower += basePower/10*(vNorm/8.);
             break;
         case 3:
-            t.baseUnitRegenRate += baseRegen/4*(vNorm/8.);
+            t.teamRegenRate += baseRegen/4*(vNorm/8.);
             break;
         case 4:
-            t.baseUnitSpawnRate += baseSpawn/10*(vNorm/8.);
+            t.teamSpawnRate += baseSpawn/10*(vNorm/8.);
             break;
         case 15:
             
@@ -80,45 +82,9 @@
     }
 }
 
--(PreUnit*)createUnitFromVal:(int)v {
-    PreUnit *p = [PreUnit new];
-    NSString *tS; //typestring
-    NSString *qS; //qualitystring
-    
-    switch (v/4) {
-        case 0:
-            tS = @"runner";
-            break;
-        case 1:
-            tS = @"soldier";
-            break;
-        case 2:
-            tS = @"heavy";
-            break;
-        case 3:
-            tS = @"medic";
-            break;
-    }
-    
-    switch (v%4) {
-        case 0:
-            qS = @"fast";
-            break;
-        case 1:
-            qS = @"tough";
-            break;
-        case 2:
-            qS = @"strong";
-            break;
-        case 3:
-            qS = @"spirited";
-            break;
-    }
-    
-    p.unitType = tS;
-    p.unitQuality = qS;
-    
-    return p;
+-(Unit *)createUnitFromVal:(int)v {
+    Unit *u = [Unit unitWithType:v/4 andQuality:v%4 ForTeam:self];
+    return u;
 }
 
 +(int)valForHexStringChar:(char)c {

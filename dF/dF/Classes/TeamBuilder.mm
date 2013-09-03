@@ -8,7 +8,7 @@
 
 #import "TeamBuilder.h"
 #import "Team.h"
-#import "PreUnit.h"
+#import "Unit.h"
 #import "Constants.h"
 
 @implementation TeamBuilder
@@ -38,19 +38,20 @@
 }
 
 +(void)describeTeam:(Team *)t  name:(NSString *)teamName {
-    NSString *healthS = (t.baseUnitHealth < baseHealth ? @"weaker" : @"tougher");
-    NSString *speedS = (t.baseUnitSpeed < baseSpeed ? @"slower" : @"faster");
-    NSString *powerS = (t.baseUnitPower < basePower ? @"less powerful" : @"more powerful");
-    NSString *regenS = (t.baseUnitRegenRate < baseRegen ? @"more slowly" : @"more quickly");
-    NSString *spawnS = (t.baseUnitSpawnRate < baseSpawn ? @"slower" : @"quicker");
+    NSString *healthS = (t.teamHealth < baseHealth ? @"weaker" : @"tougher");
+    NSString *speedS = (t.teamSpeed < baseSpeed ? @"slower" : @"faster");
+    NSString *powerS = (t.teamPower < basePower ? @"less powerful" : @"more powerful");
+    NSString *regenS = (t.teamRegenRate < baseRegen ? @"more slowly" : @"more quickly");
+    NSString *spawnS = (t.teamSpawnRate < baseSpawn ? @"slower" : @"quicker");
     
     NSString *describeString = [NSString stringWithFormat:@"%@'s troops are generally %@, %@, and %@ than average. They regenerate %@ and spawn %@ than average.", teamName, healthS, speedS, powerS, regenS, spawnS];
     
     NSLog(@"%@",describeString);
     
-    for (PreUnit *p in t.unitArray) {
-        NSLog(@"There's a %@ on %@ who is particularly %@", p.unitType, teamName, p.unitQuality);
+    for (Unit *u in t.unitArray) {
+        NSLog(@"There's a %@ on %@ who is particularly %@", [u unitTypeString], teamName, [u unitQualityString]);
     }
+
 }
 
 @end
