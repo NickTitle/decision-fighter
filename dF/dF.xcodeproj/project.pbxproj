@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8EA6720217D052C500123BB4 /* PreUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA6720117D052C500123BB4 /* PreUnit.m */; };
 		8ECF9D9417D58720004A42F6 /* Unit.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8ECF9D9317D58720004A42F6 /* Unit.mm */; };
 		8EF313B517CDACCB006929E7 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF313B417CDACCB006929E7 /* QuartzCore.framework */; };
 		8EF313B717CDACCB006929E7 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF313B617CDACCB006929E7 /* OpenGLES.framework */; };
@@ -194,8 +193,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8EA6720017D052C500123BB4 /* PreUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreUnit.h; path = Entities/PreUnit.h; sourceTree = "<group>"; };
-		8EA6720117D052C500123BB4 /* PreUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreUnit.m; path = Entities/PreUnit.m; sourceTree = "<group>"; };
 		8ECF9D9217D58720004A42F6 /* Unit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Unit.h; path = Entities/Unit.h; sourceTree = "<group>"; };
 		8ECF9D9317D58720004A42F6 /* Unit.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Unit.mm; path = Entities/Unit.mm; sourceTree = "<group>"; };
 		8EF313B117CDACCB006929E7 /* dF.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dF.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1202,8 +1199,6 @@
 				8EF315FF17CDAE35006929E7 /* TeamBuilder.mm */,
 				8EF3160117CDB3E4006929E7 /* Team.h */,
 				8EF3160217CDB3E4006929E7 /* Team.mm */,
-				8EA6720017D052C500123BB4 /* PreUnit.h */,
-				8EA6720117D052C500123BB4 /* PreUnit.m */,
 				8ECF9D9217D58720004A42F6 /* Unit.h */,
 				8ECF9D9317D58720004A42F6 /* Unit.mm */,
 			);
@@ -1444,7 +1439,6 @@
 				8EF315FC17CDADB6006929E7 /* ShaMachine.m in Sources */,
 				8EF3160017CDAE35006929E7 /* TeamBuilder.mm in Sources */,
 				8EF3160317CDB3E4006929E7 /* Team.mm in Sources */,
-				8EA6720217D052C500123BB4 /* PreUnit.m in Sources */,
 				8ECF9D9417D58720004A42F6 /* Unit.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

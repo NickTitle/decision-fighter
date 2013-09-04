@@ -28,6 +28,8 @@
 	GLESDebugDraw *m_debugDraw;		// strong ref
 }
 
+@property (nonatomic, retain) NSArray *teamsArray;
+
 // returns a CCScene that contains the HelloWorldLayer as the only child
 +(CCScene *) scene;
 

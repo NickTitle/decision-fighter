@@ -16,6 +16,8 @@
 #import "AppDelegate.h"
 
 #import "TeamBuilder.h"
+#import "Team.h"
+#import "Unit.h"
 
 
 enum {
@@ -32,6 +34,10 @@ enum {
 @end
 
 @implementation HelloWorldLayer
+
+@synthesize teamsArray;
+
+CGSize wSize;
 
 +(CCScene *) scene
 {
@@ -56,41 +62,28 @@ enum {
 		
 		self.touchEnabled = YES;
 		self.accelerometerEnabled = YES;
-		CGSize s = [CCDirector sharedDirector].winSize;
-		
+		wSize = [[CCDirector sharedDirector] winSize];
 		// init physics
 		[self initPhysics];
-		
-		// create reset button
-		[self createMenu];
-		
-		//Set up sprite
-		
-#if 1
-		// Use batch node. Faster
-		CCSpriteBatchNode *parent = [CCSpriteBatchNode batchNodeWithFile:@"blocks.png" capacity:100];
-		spriteTexture_ = [parent texture];
-#else
-		// doesn't use batch node. Slower
-		spriteTexture_ = [[CCTextureCache sharedTextureCache] addImage:@"blocks.png"];
-		CCNode *parent = [CCNode node];
-#endif
-		[self addChild:parent z:0 tag:kTagParentNode];
-		
-		
-		[self addNewSpriteAtPosition:ccp(s.width/2, s.height/2)];
-		
-		CCLabelTTF *label = [CCLabelTTF labelWithString:@"Tap screen" fontName:@"Marker Felt" fontSize:32];
-		[self addChild:label z:0];
-		[label setColor:ccc3(0,0,255)];
-		label.position = ccp( s.width/2, s.height-50);
 		
 		[self scheduleUpdate];
 	}
     
-    [TeamBuilder makeTeamsFromQuestion:@"Are we gonna get real(ly) drunk tonight?"];
+    self.teamsArray = [TeamBuilder makeTeamsFromQuestion:@"Are we gonna get real(ly) drunk tonight?" inWorld:world];
+    [self placeTeams];
     
 	return self;
+}
+
+-(void)placeTeams {
+    for (int i=0; i<teamsArray.count; i++) {
+        Team *tIQ = teamsArray[i];
+        for (Unit *u in tIQ.unitArray) {
+            int widthMod = (i ==0) ? 0 : 3*wSize.width/4;
+            [u placeUnitInWorldAtPoint:ccp(arc4random_uniform(wSize.width/4)+widthMod,arc4random_uniform(wSize.height)) inWorld:world];
+            [self addChild:u];
+        }
+    }
 }
 
 -(void) dealloc
@@ -159,10 +152,9 @@ enum {
 -(void) initPhysics
 {
 	
-	CGSize s = [[CCDirector sharedDirector] winSize];
-	
 	b2Vec2 gravity;
-	gravity.Set(0.0f, -10.0f);
+//	gravity.Set(0.0f, -10.0f);
+    gravity.Set(0.0f, 0.0f);
 	world = new b2World(gravity);
 	
 	
@@ -197,19 +189,19 @@ enum {
 	
 	// bottom
 	
-	groundBox.Set(b2Vec2(0,0), b2Vec2(s.width/PTM_RATIO,0));
+	groundBox.Set(b2Vec2(0,0), b2Vec2(wSize.width/PTM_RATIO,0));
 	groundBody->CreateFixture(&groundBox,0);
 	
 	// top
-	groundBox.Set(b2Vec2(0,s.height/PTM_RATIO), b2Vec2(s.width/PTM_RATIO,s.height/PTM_RATIO));
+	groundBox.Set(b2Vec2(0,wSize.height/PTM_RATIO), b2Vec2(wSize.width/PTM_RATIO,wSize.height/PTM_RATIO));
 	groundBody->CreateFixture(&groundBox,0);
 	
 	// left
-	groundBox.Set(b2Vec2(0,s.height/PTM_RATIO), b2Vec2(0,0));
+	groundBox.Set(b2Vec2(0,wSize.height/PTM_RATIO), b2Vec2(0,0));
 	groundBody->CreateFixture(&groundBox,0);
 	
 	// right
-	groundBox.Set(b2Vec2(s.width/PTM_RATIO,s.height/PTM_RATIO), b2Vec2(s.width/PTM_RATIO,0));
+	groundBox.Set(b2Vec2(wSize.width/PTM_RATIO,wSize.height/PTM_RATIO), b2Vec2(wSize.width/PTM_RATIO,0));
 	groundBody->CreateFixture(&groundBox,0);
 }
 
@@ -291,7 +283,7 @@ enum {
 		
 		location = [[CCDirector sharedDirector] convertToGL: location];
 		
-		[self addNewSpriteAtPosition: location];
+//		[self addNewSpriteAtPosition: location];
 	}
 }
 

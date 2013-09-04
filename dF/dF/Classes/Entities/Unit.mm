@@ -13,8 +13,10 @@
 
 @synthesize unitType, unitQuality;
 @synthesize unitSpeed, unitHealth, unitPower, unitRegen;
+@synthesize descLabel;
 
-+(Unit *)unitWithType:(int)typeVal andQuality:(int)qualVal ForTeam:(Team *)team {
++(Unit *)unitWithType:(int)typeVal andQuality:(int)qualVal ForTeam:(Team *)team{
+    
     Unit *u = [Unit new];
     u.unitType = typeVal;
     u.unitQuality = qualVal;
@@ -22,16 +24,15 @@
     u.unitHealth = baseHealth * (team.teamHealth/baseHealth);
     u.unitPower = basePower * (team.teamPower/basePower);
     u.unitRegen = baseRegen * (team.teamRegenRate/baseRegen);
-    
+    u.descLabel = [CCLabelTTF labelWithString:[[u unitTypeString]substringToIndex:1] fontName:@"Helvetica" fontSize:14.];
+    [u addChild:u.descLabel];
     u = [Unit modUnit:u forType:typeVal andQuality:qualVal];
     
     return u;
 }
 
 +(Unit*)modUnit:(Unit *)unit forType:(int)typeVal andQuality:(int)qualVal {
-    
-    // mods based on type
-    switch (typeVal) {
+    switch (typeVal) {    // mods based on type
         case uTRunner:
             unit.unitSpeed *= 1.4;
             unit.unitHealth *= .8;
@@ -54,8 +55,7 @@
             break;
     }
     
-    //Do mods based on unique characteristic
-    switch (qualVal) {
+    switch (qualVal) {    //Do mods based on unique characteristic
         case qualFast:
             unit.unitSpeed *= 1.2;
             break;
@@ -69,7 +69,6 @@
             unit.unitRegen *= 1.2;
             break;
     }
-    
     return unit;
 }
 
@@ -109,6 +108,25 @@
             break;
     }
     return ret;
+}
+
+-(void)placeUnitInWorldAtPoint:(CGPoint)p inWorld:(b2World *)w {
+    
+    b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.position.Set(p.x/PTM_RATIO, p.y/PTM_RATIO);
+	b2Body *body = w->CreateBody(&bodyDef);
+    
+    b2PolygonShape fBox;
+    fBox.SetAsBox(.3,.3);
+    
+    b2FixtureDef fixtureDef;
+	fixtureDef.shape = &fBox;
+	body->CreateFixture(&fixtureDef);
+    
+    [self setPTMRatio:PTM_RATIO];
+    [self setB2Body:body];
+    
 }
 
 @end

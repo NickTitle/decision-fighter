@@ -9,6 +9,8 @@
 #ifndef dF_Constants_h
 #define dF_Constants_h
 
+#define PTM_RATIO 32
+
 #define baseHealth 100.
 #define baseSpeed 10.
 #define basePower 5.

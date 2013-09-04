@@ -8,6 +8,7 @@
 
 #import "CCPhysicsSprite.h"
 #import "Box2D.h"
+#import "cocos2d.h"
 #import "Constants.h"
 
 @class Team;
@@ -21,6 +22,8 @@
 @property (nonatomic, assign) float unitHealth;
 @property (nonatomic, assign) float unitPower;
 @property (nonatomic, assign) float unitRegen;
+
+@property (nonatomic, retain) CCLabelTTF *descLabel;
 
 enum unitType {
     uTRunner = 0,
@@ -37,6 +40,7 @@ enum unitQuality {
 };
 
 +(Unit *)unitWithType:(int)typeVal andQuality:(int)qualVal ForTeam:(Team *)team;
+-(void)placeUnitInWorldAtPoint:(CGPoint)p inWorld:(b2World *)w;
 
 -(NSString *)unitTypeString;
 -(NSString *)unitQualityString;

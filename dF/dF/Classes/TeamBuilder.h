@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "ShaMachine.h"
+#import "b2World.h"
 
 @interface TeamBuilder : NSObject
 
-+(void)makeTeamsFromQuestion:(NSString*)question;
++(NSArray *)makeTeamsFromQuestion:(NSString*)question inWorld:(b2World *)world;
 
 @end
