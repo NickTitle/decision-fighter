@@ -20,11 +20,10 @@
 
 @synthesize unitArray;
 
-@synthesize world;
+@synthesize teamArrayIndex;
 
-+(Team *)defineTeamWithTeamString:(NSString *)tS inWorld:(b2World *)w{
++(Team *)defineTeamWithTeamString:(NSString *)tS{
     Team *t = [Team teamWithHealth:baseHealth speed:baseSpeed power:basePower regenRate:baseRegen spawnRate:baseSpawn];
-    t.world = w;
     for (int i=0; i< [tS length]; i++) {
         [t modTeam:t withVal:[self valForHexStringChar:[tS characterAtIndex:i]] atPosition:i];
     }

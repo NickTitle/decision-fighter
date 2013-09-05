@@ -13,25 +13,27 @@
 
 @implementation TeamBuilder
 
-+(NSArray *)makeTeamsFromQuestion:(NSString*)question inWorld:(b2World *)world{
++(NSArray *)makeTeamsFromQuestion:(NSString*)question{
     NSString *teamString = [self makeTeamStringFromRequest:question];
     NSLog(@"Original question:%@", question);
     NSLog(@"Teamstring:%@", teamString);
     
-    return [self createTeamsFromSource:teamString inWorld:world];
+    return [self createTeamsFromSource:teamString];
 }
 
 +(NSString *)makeTeamStringFromRequest:(NSString*)request {
     return [ShaMachine sha1DateSalt:request];
 }
 
-+(NSArray *)createTeamsFromSource:(NSString *)tS inWorld:(b2World *)world{
++(NSArray *)createTeamsFromSource:(NSString *)tS{
     NSString *teamAString = [tS substringToIndex:20];
     NSString *teamBString = [tS substringFromIndex:20];
     NSLog(@"\nTeam a:%@ \nTeam b:%@", teamAString, teamBString);
     
-    Team *tA = [Team defineTeamWithTeamString:teamAString inWorld:world];
-    Team *tB = [Team defineTeamWithTeamString:teamBString inWorld:world];
+    Team *tA = [Team defineTeamWithTeamString:teamAString];
+    tA.teamArrayIndex = 0;
+    Team *tB = [Team defineTeamWithTeamString:teamBString];
+    tB.teamArrayIndex = 1;
 
     [TeamBuilder describeTeam:tA name:@"The first team"];
     [TeamBuilder describeTeam:tB name:@"The other team"];

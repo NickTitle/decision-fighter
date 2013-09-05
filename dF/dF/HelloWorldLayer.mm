@@ -69,10 +69,20 @@ CGSize wSize;
 		[self scheduleUpdate];
 	}
     
-    self.teamsArray = [TeamBuilder makeTeamsFromQuestion:@"Are we gonna get real(ly) drunk tonight?" inWorld:world];
+    self.teamsArray = [TeamBuilder makeTeamsFromQuestion:@"Am I wearing blue underwear"];
     [self placeTeams];
-    
 	return self;
+}
+
+- (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	//Add a new body/atlas sprite at the touched location
+	for( UITouch *touch in touches ) {
+		CGPoint location = [touch locationInView: [touch view]];
+		
+		location = [[CCDirector sharedDirector] convertToGL: location];
+        
+	}
 }
 
 -(void)placeTeams {
@@ -97,8 +107,7 @@ CGSize wSize;
 	[super dealloc];
 }	
 
--(void) createMenu
-{
+-(void) createMenu {
 	// Default font size will be 22 points.
 	[CCMenuItemFont setFontSize:22];
 	
@@ -149,8 +158,7 @@ CGSize wSize;
 	[self addChild: menu z:-1];	
 }
 
--(void) initPhysics
-{
+-(void) initPhysics {
 	
 	b2Vec2 gravity;
 //	gravity.Set(0.0f, -10.0f);
@@ -205,8 +213,7 @@ CGSize wSize;
 	groundBody->CreateFixture(&groundBox,0);
 }
 
--(void) draw
-{
+-(void) draw {
 	//
 	// IMPORTANT:
 	// This is only for debug purposes
@@ -223,8 +230,7 @@ CGSize wSize;
 	kmGLPopMatrix();
 }
 
--(void) addNewSpriteAtPosition:(CGPoint)p
-{
+-(void) addNewSpriteAtPosition:(CGPoint)p {
 	CCLOG(@"Add sprite %0.2f x %02.f",p.x,p.y);
 	// Define the dynamic body.
 	//Set up a 1m squared box in the physics world
@@ -260,8 +266,7 @@ CGSize wSize;
 
 }
 
--(void) update: (ccTime) dt
-{
+-(void) update: (ccTime) dt {
 	//It is recommended that a fixed time step is used with Box2D for stability
 	//of the simulation, however, we are using a variable time step here.
 	//You need to make an informed choice, the following URL is useful
@@ -272,19 +277,90 @@ CGSize wSize;
 	
 	// Instruct the world to perform a single step of simulation. It is
 	// generally best to keep the time step and iterations fixed.
+    [self updateSoldiers];
 	world->Step(dt, velocityIterations, positionIterations);	
 }
 
-- (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+-(void)updateSoldiers {
+    for (Team *t in teamsArray) {
+        for (Unit *u in t.unitArray) {
+            [self stepUnit:u];
+        }
+    }
+}
+
+-(void)stepUnit:(Unit *)u {
+    Unit *target = nil;
+    switch (u.unitType) {
+        case uTRunner:
+            target = [self nearestUnitOfType:uTHeavy toUnit:u sameTeam:FALSE];
+            break;
+        case uTSoldier:
+            target = [self nearestUnitOfType:uTSoldier toUnit:u sameTeam:FALSE];
+            break;
+        case uTHeavy:
+            target = [self nearestUnitOfType:uTNoType toUnit:u sameTeam:FALSE];
+            break;
+        case uTMedic:
+            target = [self nearestUnitOfType:uTNoType toUnit:u sameTeam:TRUE];
+            break;
+    }
+    if (u.unitHealth < u.unitMaxHealth/2) {
+        target = [self nearestUnitOfType:uTMedic toUnit:u sameTeam:TRUE];
+    }
+    
+    float targetAngle;
+    
+    if (target == nil) {
+        targetAngle = [self pointPairToBearingDegreesStart:u.position end:ccp(wSize.width/2, wSize.height/2)];
+    }
+    else {
+        targetAngle = [self pointPairToBearingDegreesStart:u.position end:target.position];
+    }
+
+    float newXVel = cos(targetAngle)*u.unitSpeed;
+    float newYVel = sin(targetAngle)*u.unitSpeed;
+
+    b2Body *b = u.b2Body;
+    b2Vec2 vel = b->GetLinearVelocity();
+
+    float impulseX = (vel.x + newXVel)/4;
+    float impulseY = (vel.y + newYVel)/4;
+
+    b->SetLinearVelocity(b2Vec2(impulseX, impulseY));
+}
+
+-(Unit *)nearestUnitOfType:(int)unitType toUnit:(Unit *)unit sameTeam:(BOOL)sameTeamBool {
+    Team *tIQ;
+    int sameTeamIndex = unit.unitTeam.teamArrayIndex;
+    int otherTeamIndex;
+    if (sameTeamBool) {
+        tIQ = [teamsArray objectAtIndex:sameTeamIndex];
+    }
+    else {
+        otherTeamIndex = (sameTeamIndex == 0) ? 1 : 0;
+        tIQ = [teamsArray objectAtIndex:otherTeamIndex];
+    }
+    float dist = 9999.;
+    Unit *uTR = nil; //unit to return
+    for (Unit *uIQ in tIQ.unitArray) {
+        if ((unitType != uTNoType)  && (uIQ.unitType != unitType))
+            continue;
+        float checkDist = ccpDistance(unit.position, uIQ.position);
+        if ((checkDist < dist) && (checkDist < 100))
+            dist = checkDist;
+            uTR = uIQ;
+    }
+    return uTR;
+}
+
+-(float) pointPairToBearingDegreesStart:(CGPoint)startingPoint end:(CGPoint)endingPoint
 {
-	//Add a new body/atlas sprite at the touched location
-	for( UITouch *touch in touches ) {
-		CGPoint location = [touch locationInView: [touch view]];
-		
-		location = [[CCDirector sharedDirector] convertToGL: location];
-		
-//		[self addNewSpriteAtPosition: location];
-	}
+    CGPoint originPoint = CGPointMake(endingPoint.x - startingPoint.x, endingPoint.y - startingPoint.y); // get origin point to origin by subtracting end from start
+    float bearingRadians = atan2f(originPoint.y, originPoint.x); // get bearing in radians
+    float bearingDegrees = bearingRadians * (180.0 / M_PI); // convert to degrees
+    bearingDegrees = (bearingDegrees > 0.0 ? bearingDegrees : (360.0 + bearingDegrees)); // correct discontinuity
+    return bearingDegrees * M_PI/180;
 }
 
 #pragma mark GameKit delegate

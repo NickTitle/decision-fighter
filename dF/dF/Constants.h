@@ -12,7 +12,7 @@
 #define PTM_RATIO 32
 
 #define baseHealth 100.
-#define baseSpeed 10.
+#define baseSpeed 5.
 #define basePower 5.
 #define baseRegen 3.
 #define baseSpawn 20.

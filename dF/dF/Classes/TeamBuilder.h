@@ -12,6 +12,6 @@
 
 @interface TeamBuilder : NSObject
 
-+(NSArray *)makeTeamsFromQuestion:(NSString*)question inWorld:(b2World *)world;
++(NSArray *)makeTeamsFromQuestion:(NSString*)question;
 
 @end

@@ -18,9 +18,9 @@
 @property (nonatomic, assign) float teamRegenRate;
 @property (nonatomic, assign) float teamSpawnRate;
 @property (nonatomic, retain) NSMutableArray *unitArray;
-@property (nonatomic, assign) b2World *world;
+@property (nonatomic, assign) int teamArrayIndex;
 
-+(Team *)defineTeamWithTeamString:(NSString*)ts inWorld:(b2World *)w;
++(Team *)defineTeamWithTeamString:(NSString*)ts;
 
 
 @end

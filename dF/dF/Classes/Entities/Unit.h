@@ -19,13 +19,16 @@
 @property(nonatomic, assign) int unitQuality;
 
 @property (nonatomic, assign) float unitSpeed;
+@property (nonatomic, assign) float unitMaxHealth;
 @property (nonatomic, assign) float unitHealth;
 @property (nonatomic, assign) float unitPower;
 @property (nonatomic, assign) float unitRegen;
+@property (nonatomic, assign) Team *unitTeam;
 
 @property (nonatomic, retain) CCLabelTTF *descLabel;
 
 enum unitType {
+    uTNoType = -1,
     uTRunner = 0,
     uTSoldier,
     uTHeavy,

@@ -12,7 +12,8 @@
 @implementation Unit
 
 @synthesize unitType, unitQuality;
-@synthesize unitSpeed, unitHealth, unitPower, unitRegen;
+@synthesize unitSpeed, unitMaxHealth, unitHealth, unitPower, unitRegen;
+@synthesize unitTeam;
 @synthesize descLabel;
 
 +(Unit *)unitWithType:(int)typeVal andQuality:(int)qualVal ForTeam:(Team *)team{
@@ -22,8 +23,10 @@
     u.unitQuality = qualVal;
     u.unitSpeed = baseSpeed * (team.teamSpeed/baseSpeed);
     u.unitHealth = baseHealth * (team.teamHealth/baseHealth);
+    u.unitMaxHealth = u.unitHealth;
     u.unitPower = basePower * (team.teamPower/basePower);
     u.unitRegen = baseRegen * (team.teamRegenRate/baseRegen);
+    u.unitTeam = team;
     u.descLabel = [CCLabelTTF labelWithString:[[u unitTypeString]substringToIndex:1] fontName:@"Helvetica" fontSize:14.];
     [u addChild:u.descLabel];
     u = [Unit modUnit:u forType:typeVal andQuality:qualVal];
@@ -37,21 +40,25 @@
             unit.unitSpeed *= 1.4;
             unit.unitHealth *= .8;
             unit.unitPower *= .8;
+            unit.scale = .8;
             break;
         case uTSoldier:
             unit.unitPower *= 1.2;
             unit.unitRegen *= .8;
+            unit.scale = 1.05;
             break;
         case uTHeavy:
             unit.unitSpeed *= .7;
             unit.unitHealth *= 1.3;
             unit.unitPower *= 1.3;
             unit.unitRegen *= .7;
+            unit.scale = 1.25;
             break;
         case uTMedic:
             unit.unitHealth *= 1.2;
             unit.unitRegen *= 1.2;
             unit.unitPower *= .6;
+            unit.scale = .95;
             break;
     }
     
@@ -118,7 +125,7 @@
 	b2Body *body = w->CreateBody(&bodyDef);
     
     b2PolygonShape fBox;
-    fBox.SetAsBox(.3,.3);
+    fBox.SetAsBox(.3*self.scale,.3*self.scale);
     
     b2FixtureDef fixtureDef;
 	fixtureDef.shape = &fBox;
