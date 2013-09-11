@@ -577,6 +577,7 @@
 		8EF3160117CDB3E4006929E7 /* Team.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Team.h; path = Entities/Team.h; sourceTree = "<group>"; };
 		8EF3160217CDB3E4006929E7 /* Team.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Team.mm; path = Entities/Team.mm; sourceTree = "<group>"; };
 		8EF3160417CDB714006929E7 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		8EF4380D17DEB8D0007D25A0 /* SimpleContactListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleContactListener.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -635,6 +636,7 @@
 		8EF313C617CDACCB006929E7 /* dF */ = {
 			isa = PBXGroup;
 			children = (
+				8EF4380D17DEB8D0007D25A0 /* SimpleContactListener.h */,
 				8EF315FD17CDAE1C006929E7 /* Classes */,
 				8EF315E717CDACD0006929E7 /* AppDelegate.h */,
 				8EF315E817CDACD0006929E7 /* AppDelegate.mm */,

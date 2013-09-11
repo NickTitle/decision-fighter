@@ -25,6 +25,12 @@
 @property (nonatomic, assign) float unitRegen;
 @property (nonatomic, assign) Team *unitTeam;
 
+@property (nonatomic, assign) int unitState;
+@property (nonatomic, assign) b2Vec2 targetVel;
+@property (nonatomic, assign) CGPoint targetPoint;
+@property (nonatomic, assign) int targetCountdown;
+@property (nonatomic, assign) Unit *targetUnit;
+
 @property (nonatomic, retain) CCLabelTTF *descLabel;
 
 enum unitType {
@@ -40,6 +46,13 @@ enum unitQuality {
     qualTough,
     qualStrong,
     qualHealthy
+};
+
+enum unitState {
+    uSSearching = 0,
+    uSAttacking = 1,
+    uSRunning = 2,
+    uSAssisting = 3
 };
 
 +(Unit *)unitWithType:(int)typeVal andQuality:(int)qualVal ForTeam:(Team *)team;

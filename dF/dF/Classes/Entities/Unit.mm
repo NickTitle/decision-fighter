@@ -14,6 +14,12 @@
 @synthesize unitType, unitQuality;
 @synthesize unitSpeed, unitMaxHealth, unitHealth, unitPower, unitRegen;
 @synthesize unitTeam;
+@synthesize unitState;
+@synthesize targetVel;
+@synthesize targetPoint;
+@synthesize targetCountdown;
+@synthesize targetUnit;
+
 @synthesize descLabel;
 
 +(Unit *)unitWithType:(int)typeVal andQuality:(int)qualVal ForTeam:(Team *)team{
@@ -124,11 +130,16 @@
 	bodyDef.position.Set(p.x/PTM_RATIO, p.y/PTM_RATIO);
 	b2Body *body = w->CreateBody(&bodyDef);
     
-    b2PolygonShape fBox;
-    fBox.SetAsBox(.3*self.scale,.3*self.scale);
+//    b2PolygonShape fBox;
+//    fBox.SetAsBox(self.scale,self.scale);
+    
+    b2CircleShape fCirc;
+    fCirc.m_radius = self.scale;
     
     b2FixtureDef fixtureDef;
-	fixtureDef.shape = &fBox;
+//	fixtureDef.shape = &fBox;
+    fixtureDef.shape = &fCirc;
+    fixtureDef.density = 1;
 	body->CreateFixture(&fixtureDef);
     
     [self setPTMRatio:PTM_RATIO];

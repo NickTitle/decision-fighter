@@ -18,7 +18,7 @@
 #import "TeamBuilder.h"
 #import "Team.h"
 #import "Unit.h"
-
+#import "SimpleContactListener.h"
 
 enum {
 	kTagParentNode = 1,
@@ -37,7 +37,12 @@ enum {
 
 @synthesize teamsArray;
 
+NSMutableArray *allUnitsArray;
+NSMutableArray *targetsArray;
+SimpleContactListener *_contactListener;
+
 CGSize wSize;
+BOOL skip = 0;
 
 +(CCScene *) scene
 {
@@ -70,6 +75,8 @@ CGSize wSize;
 	}
     
     self.teamsArray = [TeamBuilder makeTeamsFromQuestion:@"Am I wearing blue underwear"];
+    allUnitsArray = [NSMutableArray new];
+    targetsArray = [NSMutableArray new];
     [self placeTeams];
 	return self;
 }
@@ -79,9 +86,7 @@ CGSize wSize;
 	//Add a new body/atlas sprite at the touched location
 	for( UITouch *touch in touches ) {
 		CGPoint location = [touch locationInView: [touch view]];
-		
 		location = [[CCDirector sharedDirector] convertToGL: location];
-        
 	}
 }
 
@@ -91,7 +96,10 @@ CGSize wSize;
         for (Unit *u in tIQ.unitArray) {
             int widthMod = (i ==0) ? 0 : 3*wSize.width/4;
             [u placeUnitInWorldAtPoint:ccp(arc4random_uniform(wSize.width/4)+widthMod,arc4random_uniform(wSize.height)) inWorld:world];
+            u.b2Body->SetLinearVelocity(b2Vec2(arc4random_uniform(100)-50, arc4random_uniform(100)-50));
             [self addChild:u];
+            [allUnitsArray addObject:u];
+            u.descLabel.string = [NSString stringWithFormat:@"%@%i",u.descLabel.string, [teamsArray indexOfObject:tIQ]];
         }
     }
 }
@@ -164,7 +172,8 @@ CGSize wSize;
 //	gravity.Set(0.0f, -10.0f);
     gravity.Set(0.0f, 0.0f);
 	world = new b2World(gravity);
-	
+    _contactListener = new SimpleContactListener(self);
+    world->SetContactListener(_contactListener);
 	
 	// Do we want to let bodies sleep?
 	world->SetAllowSleeping(true);
@@ -267,21 +276,28 @@ CGSize wSize;
 }
 
 -(void) update: (ccTime) dt {
-	//It is recommended that a fixed time step is used with Box2D for stability
-	//of the simulation, however, we are using a variable time step here.
-	//You need to make an informed choice, the following URL is useful
 	//http://gafferongames.com/game-physics/fix-your-timestep/
-	
-	int32 velocityIterations = 8;
-	int32 positionIterations = 1;
-	
-	// Instruct the world to perform a single step of simulation. It is
-	// generally best to keep the time step and iterations fixed.
+
+    int32 velocityIterations = 8;
+	int32 positionIterations = 3;
+    
+    float maximumStep = 0.08;
+    float progress = 0.0;
+    while (progress < dt)
+    {
+        float step = min((dt-progress), maximumStep);
+        world->Step(dt, velocityIterations, positionIterations);
+        progress += step;
+    }
+    
     [self updateSoldiers];
 	world->Step(dt, velocityIterations, positionIterations);	
 }
 
 -(void)updateSoldiers {
+    skip = !skip;
+    if (skip)
+        return;
     for (Team *t in teamsArray) {
         for (Unit *u in t.unitArray) {
             [self stepUnit:u];
@@ -290,6 +306,95 @@ CGSize wSize;
 }
 
 -(void)stepUnit:(Unit *)u {
+    if (u.targetCountdown <= 0) {
+        [self setStateForUnit:u];
+        u.targetCountdown = arc4random_uniform(100)+50;
+        return;
+    }
+    u.targetCountdown -= 1;
+    
+    b2Vec2 uVec = u.b2Body->GetLinearVelocity();
+    b2Vec2 tV = b2Vec2(0.,0.);
+    
+    float targetAngle = [self pointPairToBearingDegreesStart:u.position end:u.targetPoint];
+    float dist = ccpDistance(u.position, u.targetPoint);
+    if (dist > u.scale*PTM_RATIO) {
+        tV.x = cos(targetAngle)*u.unitSpeed;
+        tV.y = sin(targetAngle)*u.unitSpeed;
+    }
+    else {
+        u.b2Body->SetLinearVelocity(tV);
+        u.b2Body->SetAngularVelocity(0.f);
+        return;
+    }
+
+    
+    NSDictionary *neighborsAndInvaders = [self getNeighborsAndSpaceInvadersForUnit:u];
+    
+    CGPoint invaderCOM = [self centerOfMassForArrayOfUnits:neighborsAndInvaders[@"spaceInvaders"]];
+    
+    float runAngle = [self pointPairToBearingDegreesStart:u.position end:invaderCOM];
+    
+    b2Vec2 runVec = b2Vec2(u.unitSpeed/2.*cosf(runAngle), u.unitSpeed/2.*sinf(runAngle));
+    
+    tV.x = (tV.x  - runVec.x);
+    tV.y = (tV.y  - runVec.y);
+    u.targetVel = tV;
+    uVec.x = (uVec.x + u.targetVel.x)/2;
+    uVec.y = (uVec.y + u.targetVel.y)/2;
+    
+    u.b2Body->SetLinearVelocity(uVec);
+    if (uVec.x != 0 || uVec.y != 0) {
+        u.b2Body->SetTransform(u.b2Body->GetPosition(), [self pointPairToBearingDegreesStart:ccp(0,0) end:ccp(tV.x, tV.y)]);
+    }
+    
+}
+
+-(void)setStateForUnit:(Unit *)u {
+    if(u.unitHealth < u.unitMaxHealth/2) {
+        u.unitState = uSRunning;
+        return;
+    }
+    if (u.unitState == uSAttacking) {
+        [targetsArray removeObject:u.targetUnit];
+        u.unitState = uSSearching;
+    }
+    if (u.unitState == uSSearching) {
+    }
+    [self getTargetForUnit:u];
+}
+
+-(CGPoint)getTargetForUnit:(Unit *)u {
+    Unit *target = nil;
+    switch (u.unitType) {
+        case uTRunner:
+            target = [self nearestUnitOfType:uTHeavy toUnit:u sameTeam:FALSE];
+            break;
+        case uTSoldier:
+            target = [self nearestUnitOfType:uTSoldier toUnit:u sameTeam:FALSE];
+            break;
+        case uTHeavy:
+            target = [self nearestUnitOfType:uTNoType toUnit:u sameTeam:FALSE];
+            break;
+        case uTMedic:
+            target = [self nearestUnitOfType:uTNoType toUnit:u sameTeam:TRUE];
+            break;
+    }
+    
+    if (target) {
+        u.targetUnit = target;
+        u.targetPoint = target.position;
+        [targetsArray addObject:target];
+        u.unitState = uSAttacking;
+    }
+    else {
+        u.targetPoint = ccp(arc4random_uniform(wSize.width), arc4random_uniform(wSize.height));
+    }
+
+    return u.targetPoint;
+}
+
+-(void)oldStepUnit:(Unit *)u {
     Unit *target = nil;
     switch (u.unitType) {
         case uTRunner:
@@ -344,7 +449,7 @@ CGSize wSize;
     float dist = 9999.;
     Unit *uTR = nil; //unit to return
     for (Unit *uIQ in tIQ.unitArray) {
-        if ((unitType != uTNoType)  && (uIQ.unitType != unitType))
+        if (((unitType != uTNoType)  && (uIQ.unitType != unitType)) || [targetsArray containsObject:uIQ])
             continue;
         float checkDist = ccpDistance(unit.position, uIQ.position);
         if ((checkDist < dist) && (checkDist < 100))
@@ -354,13 +459,63 @@ CGSize wSize;
     return uTR;
 }
 
+-(NSDictionary *)getNeighborsAndSpaceInvadersForUnit:(Unit *)unit {
+    NSMutableArray *neighbors = [NSMutableArray new];
+    NSMutableArray *spaceInvaders = [NSMutableArray new];
+    
+    for (Unit *u in unit.unitTeam.unitArray) {
+        float uD = ccpDistance(unit.position, u.position);
+        if (uD < 64) {
+            [spaceInvaders addObject:u];
+        }
+        if (uD < 128) {
+            [neighbors addObject:u];
+        }
+    }
+    return @{@"neighbors": neighbors, @"spaceInvaders": spaceInvaders};
+}
+
+-(CGPoint)centerOfMassForArrayOfUnits:(NSMutableArray *)arr{
+    float cOMX;
+    float cOMY;
+    for (Unit *u in arr) {
+        cOMX += u.position.x;
+        cOMY += u.position.y;
+    }
+    cOMX /= [arr count];
+    cOMY /= [arr count];
+    
+    return ccp(cOMX, cOMY);
+}
+
+-(b2Vec2)relativeVelocityForArrayOfUnits:(NSMutableArray *)arr {
+    b2Vec2 relVel = b2Vec2(0.,0.);
+    for (Unit *u in arr) {
+        relVel += u.b2Body->GetLinearVelocity();
+    }
+    relVel.x /= [arr count];
+    relVel.y /= [arr count];
+    
+    return relVel;
+}
+
 -(float) pointPairToBearingDegreesStart:(CGPoint)startingPoint end:(CGPoint)endingPoint
 {
     CGPoint originPoint = CGPointMake(endingPoint.x - startingPoint.x, endingPoint.y - startingPoint.y); // get origin point to origin by subtracting end from start
     float bearingRadians = atan2f(originPoint.y, originPoint.x); // get bearing in radians
     float bearingDegrees = bearingRadians * (180.0 / M_PI); // convert to degrees
     bearingDegrees = (bearingDegrees > 0.0 ? bearingDegrees : (360.0 + bearingDegrees)); // correct discontinuity
-    return bearingDegrees * M_PI/180;
+    return bearingDegrees * M_PI/180.;
+}
+
+-(void)beginContact:(b2Contact *)contact {
+    NSLog(@"Contact");
+    
+}
+
+-(void)endContact:(b2Contact *)contact {
+    
+    
 }
 
 #pragma mark GameKit delegate
